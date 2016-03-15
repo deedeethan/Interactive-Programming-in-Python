@@ -1,4 +1,3 @@
-
 import simplegui
 
 turn = 1
@@ -7,61 +6,72 @@ point = [0,0]
 game_over = False
 values = {1:'', 2:'', 3:'', 4:'', 5:'', 6:'', 7:'', 8:'', 9:''}
 empty = [True for i in range(9)]
+pieces = {}
 outcome = "Fancy a game of Tic-Tac-Toe?"
 
 # Handler for mouse click
 def mouse_handler(position):
-    global turn, sign, point, values, outcome
+    global turn, sign, point, values, outcome 
     if turn%2 == 1:
         sign = "O"
         outcome = "X's turn."
     else:
         sign = "X"
         outcome = "O's turn."
-    turn += 1
-    label.set_text(outcome)
-
+    turn += 1    
+    label.set_text(outcome)    
+    
     if position[1] < 100:
         if position[0] < 100:
             point = [30,70]
             values[1] = sign
             empty[0] = False
+            
+            pieces[1] = [point, sign, True]
         elif position[0] < 200:
             point = [130,70]
             values[2] = sign
             empty[1] = False
+            pieces[2] = [point, sign, True]
         elif position[0] < 300:
             point = [230,70]
             values[3] = sign
             empty[2] = False
+            pieces[3] = [point, sign, True]
     elif position[1] < 200:
         if position[0] < 100:
             point = [30,170]
             values[4] = sign
             empty[3] = False
+            pieces[4] = [point, sign, True]
         elif position[0] < 200:
             point = [130,170]
             values[5] = sign
             empty[4] = False
+            pieces[5] = [point, sign, True]
         elif position[0] < 300:
             point = [230,170]
             values[6] = sign
             empty[5] = False
+            pieces[6] = [point, sign, True]
     elif position[1] < 300:
         if position[0] < 100:
             point = [30,270]
             values[7] = sign
             empty[6] = False
+            pieces[7] = [point, sign, True]
         elif position[0] < 200:
             point = [130,270]
             values[8] = sign
             empty[7] = False
+            pieces[8] = [point, sign, True]
         elif position[0] < 300:
             point = [230,270]
             values[9] = sign
             empty[8] = False
+            pieces[9] = [point, sign, True]
     get_winner()
-
+            
 def new_game():
     global game_over, turn, sign, point, outcome, values
     game_over = False
@@ -69,6 +79,7 @@ def new_game():
     sign = ""
     point = [0,0]
     values = {1:'', 2:'', 3:'', 4:'', 5:'', 6:'', 7:'', 8:'', 9:''}
+    dict = {}
     outcome = "Fancy a game of Tic-Tac-Toe?"
     label.set_text(outcome)
 
@@ -96,14 +107,14 @@ def get_winner():
 # Handler to draw on canvas
 def draw(canvas):
     if game_over == False:
-        for n in range(9):
-            if empty[n] == False:
-                # draws only one sign at a time bc point is changed with each click
-                canvas.draw_text(sign, point, 60, "Red")
+        for key in pieces:
+            # draws all the pieces you've clicked correctly, but will draw over pieces you've already put on the board
+            canvas.draw_text(pieces[key][1], pieces[key][0], 60, "Red")
     canvas.draw_line([100,0], [100,300], 5, "White")
     canvas.draw_line([200,0], [200,300], 5, "White")
     canvas.draw_line([0,100], [300,100], 5, "White")
     canvas.draw_line([0,200], [300,200], 5, "White")
+    # also, will not clear the board when you click the button "New game"
 
 # Create a frame and assign callbacks to event handlers
 frame = simplegui.create_frame("Tic-Tac-Toe", 300, 300)
@@ -114,4 +125,3 @@ frame.set_draw_handler(draw)
 
 # Start the frame animation
 frame.start()
-
